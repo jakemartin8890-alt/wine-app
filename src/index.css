@@ -1,0 +1,13 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #f7f0e8;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: auto;
+}
