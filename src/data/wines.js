@@ -12,6 +12,11 @@ export const wines = [
     notes: "Full-bodied with notes of blackcurrant, cedar, and tobacco. Silky tannins with a long, elegant finish.",
     pairings: ["Lamb", "Duck", "Aged Cheese"],
     color: "#8B1A1A",
+    retailers: [
+      { name: "Wine.com", url: "https://www.wine.com/search/wines?text=Chateau+Margaux" },
+      { name: "Total Wine", url: "https://www.totalwine.com/search/all?text=Chateau+Margaux" },
+      { name: "Vivino", url: "https://www.vivino.com/search/wines?q=Chateau+Margaux" },
+    ],
   },
   {
     id: 2,
@@ -26,6 +31,11 @@ export const wines = [
     notes: "Crisp and zesty with intense passion fruit, citrus, and fresh herb aromas. Clean, refreshing finish.",
     pairings: ["Seafood", "Goat Cheese", "Salads"],
     color: "#F5E6A3",
+    retailers: [
+      { name: "Wine.com", url: "https://www.wine.com/search/wines?text=Cloudy+Bay+Sauvignon+Blanc" },
+      { name: "Total Wine", url: "https://www.totalwine.com/search/all?text=Cloudy+Bay+Sauvignon+Blanc" },
+      { name: "Vivino", url: "https://www.vivino.com/search/wines?q=Cloudy+Bay+Sauvignon+Blanc" },
+    ],
   },
   {
     id: 3,
@@ -40,6 +50,11 @@ export const wines = [
     notes: "Pale salmon pink with delicate aromas of fresh strawberry, peach, and rose petals. Light and dry.",
     pairings: ["Grilled Fish", "Light Pasta", "Charcuterie"],
     color: "#F4A7B9",
+    retailers: [
+      { name: "Wine.com", url: "https://www.wine.com/search/wines?text=Whispering+Angel+Rose" },
+      { name: "Total Wine", url: "https://www.totalwine.com/search/all?text=Whispering+Angel+Rose" },
+      { name: "Vivino", url: "https://www.vivino.com/search/wines?q=Whispering+Angel+Rose" },
+    ],
   },
   {
     id: 4,
@@ -54,6 +69,11 @@ export const wines = [
     notes: "Rich and toasty with brioche, apple, and citrus notes. Fine persistent bubbles and a creamy texture.",
     pairings: ["Oysters", "Caviar", "Fried Chicken"],
     color: "#F7E7A0",
+    retailers: [
+      { name: "Wine.com", url: "https://www.wine.com/search/wines?text=Veuve+Clicquot+Brut" },
+      { name: "Total Wine", url: "https://www.totalwine.com/search/all?text=Veuve+Clicquot+Brut" },
+      { name: "Vivino", url: "https://www.vivino.com/search/wines?q=Veuve+Clicquot+Brut" },
+    ],
   },
   {
     id: 5,
@@ -68,6 +88,11 @@ export const wines = [
     notes: "Opulent and complex with blackberry, dark chocolate, and cassis. Velvety tannins, extraordinary length.",
     pairings: ["Ribeye Steak", "Venison", "Truffle Dishes"],
     color: "#5C1010",
+    retailers: [
+      { name: "Wine.com", url: "https://www.wine.com/search/wines?text=Opus+One" },
+      { name: "Total Wine", url: "https://www.totalwine.com/search/all?text=Opus+One" },
+      { name: "Vivino", url: "https://www.vivino.com/search/wines?q=Opus+One" },
+    ],
   },
   {
     id: 6,
@@ -82,6 +107,11 @@ export const wines = [
     notes: "Light and elegant with golden apple, citrus, and floral notes. Clean mineral finish.",
     pairings: ["Shrimp", "Light Pasta", "Grilled Vegetables"],
     color: "#EDE8C4",
+    retailers: [
+      { name: "Wine.com", url: "https://www.wine.com/search/wines?text=Santa+Margherita+Pinot+Grigio" },
+      { name: "Total Wine", url: "https://www.totalwine.com/search/all?text=Santa+Margherita+Pinot+Grigio" },
+      { name: "Vivino", url: "https://www.vivino.com/search/wines?q=Santa+Margherita+Pinot+Grigio" },
+    ],
   },
   {
     id: 7,
@@ -96,6 +126,11 @@ export const wines = [
     notes: "Iconic and powerful. Dark fruits, chocolate, leather, and spice with massive structure and depth.",
     pairings: ["Wagyu Beef", "Wild Boar", "Aged Cheddar"],
     color: "#3D0C0C",
+    retailers: [
+      { name: "Wine.com", url: "https://www.wine.com/search/wines?text=Penfolds+Grange" },
+      { name: "Total Wine", url: "https://www.totalwine.com/search/all?text=Penfolds+Grange" },
+      { name: "Vivino", url: "https://www.vivino.com/search/wines?q=Penfolds+Grange" },
+    ],
   },
   {
     id: 8,
@@ -110,6 +145,11 @@ export const wines = [
     notes: "Vibrant tropical fruits with grapefruit and passionfruit. A bright, easy-drinking everyday white.",
     pairings: ["Salads", "Sushi", "Light Appetizers"],
     color: "#F0E88A",
+    retailers: [
+      { name: "Wine.com", url: "https://www.wine.com/search/wines?text=Kim+Crawford+Sauvignon+Blanc" },
+      { name: "Total Wine", url: "https://www.totalwine.com/search/all?text=Kim+Crawford+Sauvignon+Blanc" },
+      { name: "Vivino", url: "https://www.vivino.com/search/wines?q=Kim+Crawford+Sauvignon+Blanc" },
+    ],
   },
   {
     id: 9,
@@ -124,6 +164,11 @@ export const wines = [
     notes: "Smooth and approachable with strawberry, blackberry, and mocha notes. Silky finish.",
     pairings: ["Salmon", "Mushroom Risotto", "Brie"],
     color: "#9B2335",
+    retailers: [
+      { name: "Wine.com", url: "https://www.wine.com/search/wines?text=Meiomi+Pinot+Noir" },
+      { name: "Total Wine", url: "https://www.totalwine.com/search/all?text=Meiomi+Pinot+Noir" },
+      { name: "Vivino", url: "https://www.vivino.com/search/wines?q=Meiomi+Pinot+Noir" },
+    ],
   },
   {
     id: 10,
@@ -138,6 +183,11 @@ export const wines = [
     notes: "The king of Italian wines. Tar, rose, cherry, and earthy notes with firm tannins and great aging potential.",
     pairings: ["Braised Beef", "Truffle Pasta", "Hard Cheese"],
     color: "#6B1A2A",
+    retailers: [
+      { name: "Wine.com", url: "https://www.wine.com/search/wines?text=Barolo+Brunate" },
+      { name: "Total Wine", url: "https://www.totalwine.com/search/all?text=Barolo+Brunate" },
+      { name: "Vivino", url: "https://www.vivino.com/search/wines?q=Barolo+Brunate" },
+    ],
   },
   {
     id: 11,
@@ -152,6 +202,11 @@ export const wines = [
     notes: "Bright fruit flavors of apple and pear with creamy texture and fine effervescence. Celebratory and versatile.",
     pairings: ["Sushi", "Light Appetizers", "Strawberries"],
     color: "#F2E0A0",
+    retailers: [
+      { name: "Wine.com", url: "https://www.wine.com/search/wines?text=Moet+Chandon+Imperial" },
+      { name: "Total Wine", url: "https://www.totalwine.com/search/all?text=Moet+Chandon+Imperial" },
+      { name: "Vivino", url: "https://www.vivino.com/search/wines?q=Moet+Chandon+Imperial" },
+    ],
   },
   {
     id: 12,
@@ -166,6 +221,11 @@ export const wines = [
     notes: "Rich and full-bodied with blackberry jam, dark cherry, and vanilla oak. Plush and approachable.",
     pairings: ["Prime Rib", "Lamb Chops", "Dark Chocolate"],
     color: "#4A0E0E",
+    retailers: [
+      { name: "Wine.com", url: "https://www.wine.com/search/wines?text=Caymus+Special+Selection" },
+      { name: "Total Wine", url: "https://www.totalwine.com/search/all?text=Caymus+Special+Selection" },
+      { name: "Vivino", url: "https://www.vivino.com/search/wines?q=Caymus+Special+Selection" },
+    ],
   },
 ];
 

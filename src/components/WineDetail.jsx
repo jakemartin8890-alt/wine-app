@@ -1,8 +1,30 @@
+import { useState } from "react";
 import styles from "./WineDetail.module.css";
 
 const typeEmoji = { red: "🍷", white: "🥂", rosé: "🌸", sparkling: "✨" };
 
-export function WineDetail({ wine, isFavorite, onToggleFavorite, onClose }) {
+function StarRating({ value, onChange }) {
+  const [hover, setHover] = useState(0);
+  return (
+    <div className={styles.stars}>
+      {[1, 2, 3, 4, 5].map((star) => (
+        <button
+          key={star}
+          className={`${styles.star} ${(hover || value) >= star ? styles.starFilled : ""}`}
+          onClick={() => onChange(star)}
+          onMouseEnter={() => setHover(star)}
+          onMouseLeave={() => setHover(0)}
+          aria-label={`Rate ${star} star${star !== 1 ? "s" : ""}`}
+        >
+          ★
+        </button>
+      ))}
+      {value > 0 && <span className={styles.ratingLabel}>{value} / 5</span>}
+    </div>
+  );
+}
+
+export function WineDetail({ wine, isFavorite, onToggleFavorite, onClose, userRating, onRate }) {
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.panel} onClick={(e) => e.stopPropagation()}>
@@ -33,10 +55,16 @@ export function WineDetail({ wine, isFavorite, onToggleFavorite, onClose }) {
               <span className={styles.statValue}>${wine.price}</span>
             </div>
             <div className={styles.stat}>
-              <span className={styles.statLabel}>Rating</span>
+              <span className={styles.statLabel}>Critic Score</span>
               <span className={styles.statValue}>{wine.rating} / 5</span>
             </div>
           </div>
+
+          <section>
+            <h4 className={styles.sectionTitle}>Your Rating</h4>
+            <StarRating value={userRating || 0} onChange={(stars) => onRate(wine.id, stars)} />
+            {!userRating && <p className={styles.ratingPrompt}>Tap a star to rate this wine</p>}
+          </section>
 
           <section>
             <h4 className={styles.sectionTitle}>Tasting Notes</h4>
@@ -48,6 +76,23 @@ export function WineDetail({ wine, isFavorite, onToggleFavorite, onClose }) {
             <div className={styles.pairings}>
               {wine.pairings.map((p) => (
                 <span key={p} className={styles.pairing}>{p}</span>
+              ))}
+            </div>
+          </section>
+
+          <section>
+            <h4 className={styles.sectionTitle}>Where to Buy</h4>
+            <div className={styles.retailers}>
+              {wine.retailers.map((r) => (
+                <a
+                  key={r.name}
+                  href={r.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.retailerLink}
+                >
+                  {r.name} ↗
+                </a>
               ))}
             </div>
           </section>

@@ -2,12 +2,31 @@
   box-sizing: border-box;
 }
 
+:root {
+  --bg: #2a1520;
+  --surface: #3a1f2e;
+  --surface-2: #47283a;
+  --surface-3: #573446;
+  --burgundy: #9b2d3f;
+  --burgundy-light: #c0384f;
+  --gold: #d4ae58;
+  --gold-light: #e8c870;
+  --text: #f7ede6;
+  --text-muted: #b0909a;
+  --text-dim: #7a5868;
+  --border: #4a2e3c;
+}
+
 body {
   margin: 0;
   padding: 0;
-  background: #f7f0e8;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 input[type="search"]::-webkit-search-cancel-button {
   -webkit-appearance: auto;
+  filter: invert(1) opacity(0.4);
 }

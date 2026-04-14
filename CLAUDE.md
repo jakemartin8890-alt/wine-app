@@ -1,6 +1,20 @@
-# Wine Discovery App
+# Vino — Mobile-First Wine Discovery App
 
-A web app for discovering wines, viewing tasting details, and saving favorites.
+**GitHub**: https://github.com/jakemartin8890-alt/wine-app
+
+A mobile-first wine discovery app targeting Vivino's core use cases: scan, collect, discover, and share.
+
+## Product Vision
+
+Build a Vivino competitor with a dark, elegant UI (deep burgundy + gold) and a mobile-first bottom-nav shell. The five pillars:
+
+| Tab | Purpose |
+|---|---|
+| **Scan** | Camera/barcode scan to instantly identify wines |
+| **Cellar** | Personal wine collection saved to device (→ cloud) |
+| **Discover** | Search and browse the wine catalog |
+| **Social** | Follow friends, share tasting notes, activity feed |
+| **Profile** | Tasting history, reviews, collection stats |
 
 ## Project Overview
 
@@ -25,19 +39,21 @@ wine-app/
 ├── vite.config.js
 └── src/
     ├── main.jsx              # React root
-    ├── index.css             # Global reset
-    ├── App.jsx               # Root component — tab routing, state wiring
+    ├── index.css             # Global reset + CSS custom properties (dark theme)
+    ├── App.jsx               # Root component — 5-tab routing, state wiring
     ├── App.module.css
     ├── data/
     │   └── wines.js          # 12 mock wines + searchWines() filter helper
     ├── components/
+    │   ├── BottomNav.jsx     # 5-tab fixed bottom navigation (Scan/Cellar/Discover/Social/Profile)
+    │   ├── BottomNav.module.css
     │   ├── SearchBar.jsx     # Text search + type filter buttons
     │   ├── SearchBar.module.css
     │   ├── WineCard.jsx      # Grid card with color swatch, heart button
     │   ├── WineCard.module.css
     │   ├── WineDetail.jsx    # Slide-up detail panel (modal)
     │   ├── WineDetail.module.css
-    │   ├── Favorites.jsx     # Favorites tab — filtered grid + empty state
+    │   ├── Favorites.jsx     # Cellar tab — filtered grid + empty state
     │   └── Favorites.module.css
     └── hooks/
         └── useFavorites.js   # localStorage read/write for saved wine IDs
@@ -45,10 +61,12 @@ wine-app/
 
 ## Features Built
 
-1. **Discover tab** — grid of all wines, searchable and filterable by type (red / white / rosé / sparkling)
-2. **Wine cards** — color-coded left swatch, grape, region, vintage, price, rating, heart toggle
-3. **Wine detail panel** — slide-up modal with tasting notes, food pairings, and save button
-4. **Favorites tab** — persisted to `localStorage`; count badge in nav header
+1. **Bottom nav** — 5-tab fixed nav (Scan, Cellar, Discover, Social, Profile); Scan has a raised burgundy pill CTA
+2. **Dark theme** — deep near-black bg, CSS custom properties throughout; burgundy + gold accent palette
+3. **Discover tab** — grid of all wines, searchable and filterable by type (red / white / rosé / sparkling)
+4. **Wine cards** — dark surface, color-coded swatch, grape, region, vintage, price, gold rating, heart toggle
+5. **Wine detail panel** — dark slide-up modal with tasting notes, food pairings, and save button
+6. **Cellar tab** — persisted to `localStorage`; count badge in top bar; placeholder screens for Scan/Social/Profile
 
 ## Wine Data Shape
 
@@ -80,12 +98,35 @@ npm run preview
 
 ## Planned Features
 
-- [ ] Wine ratings by users (star input component)
-- [ ] Sort options — by price, rating, or vintage
+### Scan
+- [ ] Camera access + label photo capture (MediaDevices API)
+- [ ] Barcode / QR scanning (ZXing or native BarcodeDetector API)
+- [ ] Wine recognition via image → wine API lookup
+
+### Cellar
+- [ ] Wine ratings by user (star input component)
+- [ ] Per-wine personal tasting notes
+- [ ] Sort options — by price, rating, vintage, or date added
+- [ ] Filter by country or price range
+- [ ] Cloud sync (replace localStorage with a backend)
+
+### Discover
 - [ ] Detail page route (`/wine/:id`) instead of modal, for shareable URLs
 - [ ] Real wine API integration (swap out mock data in `wines.js`)
-- [ ] Filter by country or price range
 - [ ] "Recently viewed" section
+- [ ] Infinite scroll / pagination
+
+### Social
+- [ ] User accounts + auth
+- [ ] Follow/following graph
+- [ ] Activity feed (friends' recent tastings)
+- [ ] Share a tasting note card (PNG export)
+
+### Profile
+- [ ] Tasting history timeline
+- [ ] Palate stats (grape/region/type breakdown)
+- [ ] Badges and achievements
+- [ ] Export cellar to CSV
 
 ## Conventions
 

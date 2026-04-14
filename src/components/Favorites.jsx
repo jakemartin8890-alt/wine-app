@@ -2,14 +2,14 @@ import { wines } from "../data/wines";
 import { WineCard } from "./WineCard";
 import styles from "./Favorites.module.css";
 
-export function Favorites({ favorites, onSelect, onToggleFavorite }) {
+export function Favorites({ favorites, onSelect, onToggleFavorite, ratings }) {
   const favoriteWines = wines.filter((w) => favorites.includes(w.id));
 
   if (favoriteWines.length === 0) {
     return (
       <div className={styles.empty}>
         <p>♡</p>
-        <p>No favorites yet. Browse wines and tap the heart to save them here.</p>
+        <p>Your cellar is empty. Browse wines and tap the heart to add them here.</p>
       </div>
     );
   }
@@ -23,6 +23,7 @@ export function Favorites({ favorites, onSelect, onToggleFavorite }) {
           isFavorite
           onSelect={onSelect}
           onToggleFavorite={onToggleFavorite}
+          userRating={ratings?.[wine.id]}
         />
       ))}
     </div>

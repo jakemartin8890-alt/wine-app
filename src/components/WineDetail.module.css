@@ -1,15 +1,14 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.75);
   display: flex;
   align-items: flex-end;
   justify-content: center;
   z-index: 100;
-  padding: 0;
 }
 
-@media (min-width: 600px) {
+@media (min-width: 500px) {
   .overlay {
     align-items: center;
     padding: 24px;
@@ -17,19 +16,20 @@
 }
 
 .panel {
-  background: #fdfaf6;
-  border-radius: 20px 20px 0 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px 24px 0 0;
   width: 100%;
-  max-width: 540px;
-  max-height: 90vh;
+  max-width: 500px;
+  max-height: 92vh;
   overflow-y: auto;
   position: relative;
-  animation: slideUp 0.25s ease;
+  animation: slideUp 0.22s ease;
 }
 
-@media (min-width: 600px) {
+@media (min-width: 500px) {
   .panel {
-    border-radius: 20px;
+    border-radius: 24px;
   }
 }
 
@@ -40,38 +40,44 @@
 
 .close {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  background: rgba(255,255,255,0.8);
-  border: none;
+  top: 14px;
+  right: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
   border-radius: 50%;
   width: 32px;
   height: 32px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   cursor: pointer;
   z-index: 1;
-  color: #2c1810;
+  color: var(--text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: color 0.15s, background 0.15s;
+}
+
+.close:hover {
+  color: var(--text);
+  background: var(--surface-3);
 }
 
 .banner {
-  height: 140px;
+  height: 130px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 20px 20px 0 0;
-  opacity: 0.85;
+  border-radius: 24px 24px 0 0;
+  opacity: 0.75;
 }
 
 .bannerEmoji {
-  font-size: 4rem;
-  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+  font-size: 3.5rem;
+  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.5));
 }
 
 .content {
-  padding: 24px;
+  padding: 22px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -85,84 +91,88 @@
 }
 
 .type {
-  font-size: 0.75rem;
+  font-size: 0.68rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #9b6b4f;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
 }
 
 .name {
   margin: 4px 0 2px;
-  font-size: 1.4rem;
+  font-size: 1.35rem;
   font-weight: 700;
-  color: #2c1810;
+  color: var(--text);
+  line-height: 1.2;
 }
 
 .origin {
-  font-size: 0.875rem;
-  color: #7a6058;
+  font-size: 0.82rem;
+  color: var(--text-muted);
   margin: 0;
 }
 
 .fav {
   white-space: nowrap;
   padding: 8px 16px;
-  border: 2px solid #8b2635;
+  border: 1px solid var(--burgundy);
   border-radius: 20px;
   background: transparent;
-  color: #8b2635;
-  font-size: 0.875rem;
+  color: var(--burgundy-light);
+  font-size: 0.82rem;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.18s;
   flex-shrink: 0;
 }
 
 .fav:hover,
 .favActive {
-  background: #8b2635;
-  color: white;
+  background: var(--burgundy);
+  color: var(--text);
+  border-color: var(--burgundy);
 }
 
 .stats {
   display: flex;
-  gap: 24px;
+  gap: 20px;
   padding: 16px;
-  background: #f5ede3;
+  background: var(--surface-2);
   border-radius: 12px;
+  border: 1px solid var(--border);
 }
 
 .stat {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
 .statLabel {
-  font-size: 0.75rem;
+  font-size: 0.68rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #9b6b4f;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
 }
 
 .statValue {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  color: #2c1810;
+  color: var(--text);
 }
 
 .sectionTitle {
-  font-size: 0.75rem;
+  font-size: 0.68rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #9b6b4f;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
   margin: 0 0 8px;
 }
 
 .notes {
-  font-size: 0.9rem;
-  line-height: 1.6;
-  color: #4a3228;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--text);
   margin: 0;
+  opacity: 0.85;
 }
 
 .pairings {
@@ -172,9 +182,71 @@
 }
 
 .pairing {
-  padding: 4px 12px;
-  background: #f5ede3;
+  padding: 5px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
   border-radius: 16px;
-  font-size: 0.8rem;
-  color: #6b4c3b;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.stars {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.star {
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: var(--surface-3);
+  padding: 0;
+  line-height: 1;
+  transition: color 0.12s, transform 0.1s;
+}
+
+.star:hover {
+  transform: scale(1.15);
+}
+
+.starFilled {
+  color: var(--gold);
+}
+
+.ratingLabel {
+  font-size: 0.82rem;
+  color: var(--gold);
+  font-weight: 600;
+  margin-left: 6px;
+}
+
+.ratingPrompt {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 6px 0 0;
+  opacity: 0.7;
+}
+
+.retailers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.retailerLink {
+  padding: 7px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  font-size: 0.78rem;
+  color: var(--gold);
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.retailerLink:hover {
+  background: var(--surface-3);
+  border-color: var(--gold);
 }

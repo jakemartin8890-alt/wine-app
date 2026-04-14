@@ -2,7 +2,7 @@ import styles from "./WineCard.module.css";
 
 const typeEmoji = { red: "🍷", white: "🥂", rosé: "🌸", sparkling: "✨" };
 
-export function WineCard({ wine, isFavorite, onSelect, onToggleFavorite }) {
+export function WineCard({ wine, isFavorite, onSelect, onToggleFavorite, userRating }) {
   return (
     <div className={styles.card} onClick={() => onSelect(wine)}>
       <div className={styles.swatch} style={{ background: wine.color }} />
@@ -22,7 +22,11 @@ export function WineCard({ wine, isFavorite, onSelect, onToggleFavorite }) {
         {wine.vintage && <p className={styles.vintage}>{wine.vintage}</p>}
         <div className={styles.footer}>
           <span className={styles.price}>${wine.price}</span>
-          <span className={styles.rating}>{"★".repeat(Math.round(wine.rating))} {wine.rating}</span>
+          {userRating ? (
+            <span className={`${styles.rating} ${styles.userRating}`}>{"★".repeat(userRating)} You</span>
+          ) : (
+            <span className={styles.rating}>{"★".repeat(Math.round(wine.rating))} {wine.rating}</span>
+          )}
         </div>
       </div>
     </div>

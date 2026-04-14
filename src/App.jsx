@@ -1,11 +1,26 @@
 import { useState } from "react";
 import { searchWines } from "./data/wines";
 import { useFavorites } from "./hooks/useFavorites";
+import { useRatings } from "./hooks/useRatings";
 import { SearchBar } from "./components/SearchBar";
 import { WineCard } from "./components/WineCard";
 import { WineDetail } from "./components/WineDetail";
 import { Favorites } from "./components/Favorites";
+import { BottomNav } from "./components/BottomNav";
+import { SommelierChat } from "./components/SommelierChat";
+import { WineScanner } from "./components/WineScanner";
 import styles from "./App.module.css";
+
+function PlaceholderScreen({ icon, title, sub }) {
+  return (
+    <div className={styles.placeholder}>
+      <span className={styles.placeholderIcon}>{icon}</span>
+      <h2 className={styles.placeholderTitle}>{title}</h2>
+      <p className={styles.placeholderSub}>{sub}</p>
+      <span className={styles.comingSoon}>Coming soon</span>
+    </div>
+  );
+}
 
 export default function App() {
   const [tab, setTab] = useState("discover");
@@ -13,30 +28,28 @@ export default function App() {
   const [type, setType] = useState("all");
   const [selected, setSelected] = useState(null);
   const { favorites, toggle } = useFavorites();
+  const { ratings, rate } = useRatings();
 
   const results = searchWines(query, type);
 
   return (
     <div className={styles.app}>
-      <header className={styles.header}>
-        <h1 className={styles.logo}>🍷 Wine Discovery</h1>
-        <nav className={styles.nav}>
-          <button
-            className={`${styles.tab} ${tab === "discover" ? styles.tabActive : ""}`}
-            onClick={() => setTab("discover")}
-          >
-            Discover
-          </button>
-          <button
-            className={`${styles.tab} ${tab === "favorites" ? styles.tabActive : ""}`}
-            onClick={() => setTab("favorites")}
-          >
-            Favorites {favorites.length > 0 && <span className={styles.badge}>{favorites.length}</span>}
-          </button>
-        </nav>
+      <header className={styles.topBar}>
+        <div className={styles.brand}>
+          <span className={styles.brandMark}>◈</span>
+          <div>
+            <span className={styles.logo}>Vino</span>
+            <span className={styles.logoSub}>Discover · Collect · Share</span>
+          </div>
+        </div>
+        {favorites.length > 0 && (
+          <span className={styles.cellarBadge}>{favorites.length} in cellar</span>
+        )}
       </header>
 
-      <main className={styles.main}>
+      <main className={`${styles.main} ${tab === "profile" ? styles.chatMain : ""}`}>
+        {tab === "scan" && <WineScanner />}
+
         {tab === "discover" && (
           <>
             <SearchBar
@@ -56,6 +69,7 @@ export default function App() {
                     isFavorite={favorites.includes(wine.id)}
                     onSelect={setSelected}
                     onToggleFavorite={toggle}
+                    userRating={ratings[wine.id]}
                   />
                 ))}
               </div>
@@ -63,14 +77,27 @@ export default function App() {
           </>
         )}
 
-        {tab === "favorites" && (
+        {tab === "cellar" && (
           <Favorites
             favorites={favorites}
             onSelect={setSelected}
             onToggleFavorite={toggle}
+            ratings={ratings}
           />
         )}
+
+        {tab === "social" && (
+          <PlaceholderScreen
+            icon="◎"
+            title="Social"
+            sub="Follow friends, share tasting notes, and discover what others are drinking."
+          />
+        )}
+
+        {tab === "profile" && <SommelierChat />}
       </main>
+
+      <BottomNav tab={tab} onTabChange={setTab} />
 
       {selected && (
         <WineDetail
@@ -78,6 +105,8 @@ export default function App() {
           isFavorite={favorites.includes(selected.id)}
           onToggleFavorite={toggle}
           onClose={() => setSelected(null)}
+          userRating={ratings[selected.id]}
+          onRate={rate}
         />
       )}
     </div>
