@@ -111,7 +111,7 @@ app.post("/api/scan", async (req, res) => {
 if (isProd) {
   const distPath = join(__dirname, "../dist");
   app.use(express.static(distPath));
-  app.get("*", (_, res) => res.sendFile(join(distPath, "index.html")));
+  app.get("/{*path}", (_, res) => res.sendFile(join(distPath, "index.html")));
 }
 
 const PORT = process.env.PORT || 3001;
