@@ -129,6 +129,39 @@
   line-height: 1.6;
 }
 
+.dataSource {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  margin: 0 0 12px;
+  padding: 0 2px;
+}
+
+.loadMore {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  padding: 13px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.loadMore:hover:not(:disabled) {
+  border-color: var(--surface-3);
+  color: var(--text);
+}
+
+.loadMore:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
 .comingSoon {
   display: inline-block;
   margin-top: 8px;

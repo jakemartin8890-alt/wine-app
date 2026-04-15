@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { searchWines } from "./data/wines";
 import { useFavorites } from "./hooks/useFavorites";
 import { useRatings } from "./hooks/useRatings";
+import { useWineSearch } from "./hooks/useWineSearch";
 import { SearchBar } from "./components/SearchBar";
 import { WineCard } from "./components/WineCard";
 import { WineDetail } from "./components/WineDetail";
@@ -29,8 +29,7 @@ export default function App() {
   const [selected, setSelected] = useState(null);
   const { favorites, toggle } = useFavorites();
   const { ratings, rate } = useRatings();
-
-  const results = searchWines(query, type);
+  const { wines: results, loading: searchLoading, hasMore, total, usingLwin, loadMore } = useWineSearch(query, type);
 
   return (
     <div className={styles.app}>
@@ -58,21 +57,39 @@ export default function App() {
               onQueryChange={setQuery}
               onTypeChange={setType}
             />
-            {results.length === 0 ? (
+            {usingLwin && (
+              <p className={styles.dataSource}>
+                {total > 0 ? `${total.toLocaleString()} wines` : ""} · LWIN database
+              </p>
+            )}
+            {searchLoading && results.length === 0 ? (
+              <p className={styles.empty}>Searching…</p>
+            ) : results.length === 0 ? (
               <p className={styles.empty}>No wines match your search.</p>
             ) : (
-              <div className={styles.grid}>
-                {results.map((wine) => (
-                  <WineCard
-                    key={wine.id}
-                    wine={wine}
-                    isFavorite={favorites.includes(wine.id)}
-                    onSelect={setSelected}
-                    onToggleFavorite={toggle}
-                    userRating={ratings[wine.id]}
-                  />
-                ))}
-              </div>
+              <>
+                <div className={styles.grid}>
+                  {results.map((wine) => (
+                    <WineCard
+                      key={wine.id}
+                      wine={wine}
+                      isFavorite={favorites.includes(wine.id)}
+                      onSelect={setSelected}
+                      onToggleFavorite={toggle}
+                      userRating={ratings[wine.id]}
+                    />
+                  ))}
+                </div>
+                {hasMore && (
+                  <button
+                    className={styles.loadMore}
+                    onClick={loadMore}
+                    disabled={searchLoading}
+                  >
+                    {searchLoading ? "Loading…" : "Load more"}
+                  </button>
+                )}
+              </>
             )}
           </>
         )}
