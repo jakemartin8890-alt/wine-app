@@ -252,9 +252,10 @@ Return ONLY valid JSON — no markdown, no explanation:
       messages:   [{ role: "user", content: prompt }],
     });
 
-    const raw    = response.content[0].text.trim();
-    const parsed = JSON.parse(raw);
-    const result = { ...parsed, aiGenerated: true };
+    const raw     = response.content[0].text.trim();
+    const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+    const parsed  = JSON.parse(cleaned);
+    const result  = { ...parsed, aiGenerated: true };
 
     enrichCache.set(id, result);
     res.json(result);
@@ -349,11 +350,15 @@ app.post("/api/scan", async (req, res) => {
       }],
     });
 
-    const raw    = response.content[0].text.trim();
-    const parsed = JSON.parse(raw);
+    const raw     = response.content[0].text.trim();
+    const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+    console.log("[scan] Claude raw response:", cleaned.slice(0, 200));
+    const parsed  = JSON.parse(cleaned);
     res.json(parsed);
   } catch (err) {
-    res.status(500).json({ error: err instanceof Error ? err.message : "Unknown error" });
+    const message = err instanceof Error ? err.message : "Unknown error";
+    console.error("[scan] Error:", message);
+    res.status(500).json({ error: message });
   }
 });
 
