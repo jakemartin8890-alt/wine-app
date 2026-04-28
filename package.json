@@ -8,6 +8,7 @@
     "server": "node --env-file=.env server/index.js",
     "build": "vite build",
     "start": "NODE_ENV=production node server/index.js",
+    "generate-icons": "node scripts/generate-icons.js",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -19,6 +20,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",
-    "vite": "^5.4.2"
+    "vite": "^5.4.2",
+    "vite-plugin-pwa": "^1.2.0"
   }
 }
