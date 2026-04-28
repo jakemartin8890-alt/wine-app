@@ -2,7 +2,7 @@
 
 **GitHub**: https://github.com/jakemartin8890-alt/wine-app
 
-A mobile-first wine discovery app targeting Vivino's core use cases: scan, collect, discover, and share.
+A mobile-first wine discovery app targeting Vivino's core use cases: scan, collect, discover, and share. Installable as a PWA on iOS and Android.
 
 ## Product Vision
 
@@ -10,15 +10,11 @@ Build a Vivino competitor with a dark, elegant UI (deep burgundy + gold) and a m
 
 | Tab | Purpose |
 |---|---|
-| **Scan** | Camera/barcode scan to instantly identify wines |
+| **Scan** | Live camera viewfinder → Claude vision → instant wine ID |
 | **Cellar** | Personal wine collection saved to device (→ cloud) |
-| **Discover** | Search and browse the wine catalog |
+| **Discover** | Search and browse 150K real wines (Winemag dataset) |
 | **Social** | Follow friends, share tasting notes, activity feed |
-| **Profile** | Tasting history, reviews, collection stats |
-
-## Project Overview
-
-Users can search for wines by name, grape, region, or type; view detailed tasting notes and food pairings; and save favorites to a persistent local collection.
+| **Profile** | AI Sommelier chat (Ask Vino, powered by Claude) |
 
 ## Tech Stack
 
@@ -26,8 +22,10 @@ Users can search for wines by name, grape, region, or type; view detailed tastin
 - **Framework**: React 18 + Vite 5
 - **Styling**: CSS Modules (no UI libraries — all custom CSS)
 - **State**: React `useState` / `useEffect` only — no external state library
-- **Persistence**: `localStorage` via `useFavorites` hook
-- **Data**: Mock wine dataset in `src/data/wines.js` — shaped to swap in a real API later
+- **Persistence**: `localStorage` via `useFavorites`, `useRatings` hooks
+- **Data**: 150K Winemag wines auto-downloaded at server startup (`data/winemag.csv`)
+- **AI**: Claude Sonnet (vision/scan), Claude Opus (sommelier chat), Claude Haiku (enrichment)
+- **PWA**: `vite-plugin-pwa` + Workbox service worker; installable, offline-capable
 
 ## Project Structure
 
@@ -37,53 +35,81 @@ wine-app/
 ├── index.html
 ├── package.json
 ├── vite.config.js
+├── data/
+│   ├── winemag.csv           # 150K Wine Enthusiast reviews (auto-downloaded, gitignored)
+│   └── lwin.csv              # Optional LWIN backbone (gitignored)
+├── public/
+│   ├── icon.svg              # SVG app icon (◈ diamond mark)
+│   ├── icon-180.png          # Apple touch icon
+│   ├── icon-192.png          # Android PWA icon
+│   └── icon-512.png          # Splash / maskable icon
+├── scripts/
+│   └── generate-icons.js     # Pure Node.js PNG icon generator
 └── src/
-    ├── main.jsx              # React root
+    ├── main.jsx
     ├── index.css             # Global reset + CSS custom properties (dark theme)
     ├── App.jsx               # Root component — 5-tab routing, state wiring
     ├── App.module.css
     ├── data/
-    │   └── wines.js          # 12 mock wines + searchWines() filter helper
+    │   └── wines.js          # 12 mock wines (fallback) + searchWines() helper
     ├── components/
-    │   ├── BottomNav.jsx     # 5-tab fixed bottom navigation (Scan/Cellar/Discover/Social/Profile)
-    │   ├── BottomNav.module.css
-    │   ├── SearchBar.jsx     # Text search + type filter buttons
-    │   ├── SearchBar.module.css
-    │   ├── WineCard.jsx      # Grid card with color swatch, heart button
-    │   ├── WineCard.module.css
-    │   ├── WineDetail.jsx    # Slide-up detail panel (modal)
-    │   ├── WineDetail.module.css
-    │   ├── Favorites.jsx     # Cellar tab — filtered grid + empty state
-    │   └── Favorites.module.css
+    │   ├── BottomNav.jsx
+    │   ├── SearchBar.jsx
+    │   ├── WineCard.jsx      # Handles both mock and Winemag/LWIN data shapes
+    │   ├── WineDetail.jsx    # Slide-up panel: WE notes, user rating, where-to-buy, AI enrichment
+    │   ├── Favorites.jsx     # Cellar tab
+    │   ├── WineScanner.jsx   # Live camera (getUserMedia) → Claude vision → result card
+    │   └── SommelierChat.jsx # Streaming Claude chat (Ask Vino)
     └── hooks/
-        └── useFavorites.js   # localStorage read/write for saved wine IDs
+        ├── useFavorites.js   # localStorage favorites
+        ├── useRatings.js     # localStorage user star ratings
+        ├── useWineSearch.js  # Debounced API search with mock fallback
+        └── useEnrichment.js  # Claude Haiku AI enrichment with client-side cache
 ```
 
 ## Features Built
 
-1. **Bottom nav** — 5-tab fixed nav (Scan, Cellar, Discover, Social, Profile); Scan has a raised burgundy pill CTA
-2. **Dark theme** — deep near-black bg, CSS custom properties throughout; burgundy + gold accent palette
-3. **Discover tab** — grid of all wines, searchable and filterable by type (red / white / rosé / sparkling)
-4. **Wine cards** — dark surface, color-coded swatch, grape, region, vintage, price, gold rating, heart toggle
-5. **Wine detail panel** — dark slide-up modal with tasting notes, food pairings, and save button
-6. **Cellar tab** — persisted to `localStorage`; count badge in top bar; placeholder screens for Scan/Social/Profile
+1. **PWA** — installable on iOS/Android, offline-capable, Workbox service worker
+2. **Bottom nav** — 5-tab fixed nav; Scan has raised burgundy pill CTA
+3. **Dark theme** — deep near-black bg, CSS custom properties; burgundy + gold palette
+4. **Discover tab** — 150K real Winemag wines, debounced search, type filter, pagination
+5. **Wine cards** — color-coded swatch, producer, region, WE rating, user star rating
+6. **Wine detail panel** — WE tasting notes + "Wine Enthusiast" badge, WE points, user rating (1–5 stars), food pairings, where-to-buy retailer links, AI tasting profile for LWIN wines
+7. **Cellar tab** — localStorage favorites + user ratings
+8. **Scan tab** — live camera viewfinder, capture → Claude vision → wine name/vintage/region/grapes/notes/pairings/price range result card
+9. **AI Sommelier** — streaming Claude Opus chat in Profile tab
 
-## Wine Data Shape
+## Server API
 
+| Endpoint | Description |
+|---|---|
+| `GET /api/wines/search?q=&type=&page=&limit=` | Search 150K Winemag wines, paginated |
+| `POST /api/wines/enrich` | Claude Haiku AI tasting profile for a wine |
+| `POST /api/scan` | Claude Sonnet vision: identify wine label from base64 image |
+| `POST /api/sommelier` | Claude Opus streaming chat |
+
+## Wine Data Shapes
+
+**Winemag wine** (from `/api/wines/search`):
 ```js
 {
-  id: number,
-  name: string,
-  type: "red" | "white" | "rosé" | "sparkling",
-  grape: string,
-  region: string,
-  country: string,
-  vintage: number | null,
-  price: number,          // USD
-  rating: number,         // 0–5
-  notes: string,          // tasting notes
-  pairings: string[],     // food pairings
-  color: string,          // CSS hex for swatch/banner
+  id, name, producer, grape, region, country,
+  type, color,          // CSS hex, derived from variety
+  rating,               // 0–5 normalized from WE points
+  points,               // raw WE score (80–100)
+  price,                // USD or null
+  notes,                // Wine Enthusiast tasting note
+  source: "winemag",
+  searchText,
+}
+```
+
+**Mock wine** (fallback, `src/data/wines.js`):
+```js
+{
+  id, name, type, grape, region, country, vintage,
+  price, rating, notes, pairings, color,
+  retailers: [{ name, url }],
 }
 ```
 
@@ -91,46 +117,45 @@ wine-app/
 
 ```bash
 npm install
-npm run dev       # http://localhost:5173
-npm run build
-npm run preview
+npm run dev             # http://localhost:5173 (starts both Vite + Express)
+npm run build           # production build (includes PWA service worker)
+npm run preview         # preview production build locally
+npm run generate-icons  # regenerate PNG icons from scripts/generate-icons.js
 ```
 
-## Planned Features
+**Dev notes:**
+- `.env` file required with `ANTHROPIC_API_KEY=sk-ant-...` — never commit this
+- `data/winemag.csv` auto-downloads on first server start (~47MB, gitignored)
+- Vite proxies `/api/*` to Express on port 3001 in dev
 
-### Scan
-- [ ] Camera access + label photo capture (MediaDevices API)
-- [ ] Barcode / QR scanning (ZXing or native BarcodeDetector API)
-- [ ] Wine recognition via image → wine API lookup
+## Next Session Priorities
 
-### Cellar
-- [ ] Wine ratings by user (star input component)
-- [ ] Per-wine personal tasting notes
-- [ ] Sort options — by price, rating, vintage, or date added
-- [ ] Filter by country or price range
-- [ ] Cloud sync (replace localStorage with a backend)
+### 1. Social — PM-first, no code until designed
+Before writing any code, define:
+- **The social loop**: what action creates the feed? (rate a wine → appears in friends' feeds? save to cellar? write a note?)
+- **Differentiation from Vivino**: Vivino's social is weak/spammy — what's our angle? (curated taste profiles? sommelier-assisted notes? private friend groups vs public?)
+- **MVP scope**: minimum feature set that creates real engagement vs. ghost-town syndrome
+- **Success metrics**: what does "Social is working" look like at 100 users?
 
-### Discover
-- [ ] Detail page route (`/wine/:id`) instead of modal, for shareable URLs
-- [ ] Real wine API integration (swap out mock data in `wines.js`)
-- [ ] "Recently viewed" section
-- [ ] Infinite scroll / pagination
+### 2. AI Sommelier prominence
+- The Profile tab hides the sommelier behind a nav icon with no label context
+- Consider: rename Profile tab to "Sommelier" or "Ask Vino", add it as a floating button in Discover, or surface it from the wine detail panel ("Ask about this wine")
+- The sommelier is a strong differentiator — it should be more discoverable
 
-### Social
-- [ ] User accounts + auth
-- [ ] Follow/following graph
-- [ ] Activity feed (friends' recent tastings)
-- [ ] Share a tasting note card (PNG export)
+### 3. Scanned wines → Save to Cellar
+- Currently the scan result card has no "Save to Cellar" button
+- Scanned wines have a different shape than Winemag wines (no ID, no source field)
+- Need: generate a stable ID for scanned wines, store full wine object in localStorage, show in Cellar tab
 
-### Profile
-- [ ] Tasting history timeline
-- [ ] Palate stats (grape/region/type breakdown)
-- [ ] Badges and achievements
-- [ ] Export cellar to CSV
+### 4. App name + onboarding/marketing copy
+- "Vino" may conflict with existing apps — research and decide on final name
+- Add first-launch onboarding (3-screen carousel or single splash): what is this app, what can you do, why AI?
+- Add marketing copy hooks: tagline in header, empty-state CTAs that sell the value prop
 
 ## Conventions
 
 - Function components with hooks only — no class components
 - CSS Modules for all component styles — no inline styles except dynamic color values
 - No external UI or icon libraries
-- `searchWines(query, type)` in `wines.js` is the single filter entry point — extend it for new filter dimensions
+- `searchWines(query, type)` in `wines.js` is the single filter entry point for mock fallback
+- AI-generated content must be labeled — never present Claude output as authoritative reviews
