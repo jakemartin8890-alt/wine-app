@@ -9,8 +9,8 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["icon.svg", "icon-180.png", "icon-192.png", "icon-512.png"],
       manifest: {
-        name: "Vino — Wine Discovery",
-        short_name: "Vino",
+        name: "Wine About It",
+        short_name: "Wine About It",
         description: "Discover, scan, and collect wines. Your AI sommelier in your pocket.",
         theme_color: "#2a1520",
         background_color: "#2a1520",

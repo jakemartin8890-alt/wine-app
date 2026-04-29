@@ -1,4 +1,4 @@
-# Vino — Mobile-First Wine Discovery App
+# Wine About It — Mobile-First Wine Discovery App
 
 **GitHub**: https://github.com/jakemartin8890-alt/wine-app
 

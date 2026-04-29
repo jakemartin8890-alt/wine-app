@@ -122,9 +122,9 @@ export function SommelierChat() {
       {/* Header */}
       <div className={styles.header}>
         <div className={styles.headerLeft}>
-          <div className={styles.avatar}>V</div>
+          <div className={styles.avatar}>W</div>
           <div>
-            <span className={styles.headerTitle}>Ask Vino</span>
+            <span className={styles.headerTitle}>Ask the Sommelier</span>
             <span className={styles.headerSub}>Master sommelier · Powered by Claude</span>
           </div>
         </div>

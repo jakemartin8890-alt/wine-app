@@ -57,7 +57,7 @@ export function WineDetail({ wine, isFavorite, onToggleFavorite, onClose, userRa
             </div>
             <button
               className={`${styles.fav} ${isFavorite ? styles.favActive : ""}`}
-              onClick={() => onToggleFavorite(wine.id)}
+              onClick={() => onToggleFavorite(wine)}
             >
               {isFavorite ? "♥ Saved" : "♡ Save"}
             </button>

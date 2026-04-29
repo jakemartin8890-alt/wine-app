@@ -27,7 +27,7 @@ export default function App() {
   const [query, setQuery] = useState("");
   const [type, setType] = useState("all");
   const [selected, setSelected] = useState(null);
-  const { favorites, toggle } = useFavorites();
+  const { favorites, favoriteWines, toggle } = useFavorites();
   const { ratings, rate } = useRatings();
   const { wines: results, loading: searchLoading, hasMore, total, usingLwin, loadMore } = useWineSearch(query, type);
 
@@ -37,7 +37,7 @@ export default function App() {
         <div className={styles.brand}>
           <span className={styles.brandMark}>◈</span>
           <div>
-            <span className={styles.logo}>Vino</span>
+            <span className={styles.logo}>Wine About It</span>
             <span className={styles.logoSub}>Discover · Collect · Share</span>
           </div>
         </div>
@@ -96,7 +96,7 @@ export default function App() {
 
         {tab === "cellar" && (
           <Favorites
-            favorites={favorites}
+            favoriteWines={favoriteWines}
             onSelect={setSelected}
             onToggleFavorite={toggle}
             ratings={ratings}

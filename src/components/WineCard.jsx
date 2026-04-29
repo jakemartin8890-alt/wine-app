@@ -19,7 +19,7 @@ export function WineCard({ wine, isFavorite, onSelect, onToggleFavorite, userRat
           <span className={styles.type}>{label}</span>
           <button
             className={`${styles.fav} ${isFavorite ? styles.favActive : ""}`}
-            onClick={(e) => { e.stopPropagation(); onToggleFavorite(wine.id); }}
+            onClick={(e) => { e.stopPropagation(); onToggleFavorite(wine); }}
             aria-label={isFavorite ? "Remove from cellar" : "Add to cellar"}
           >
             {isFavorite ? "♥" : "♡"}

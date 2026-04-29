@@ -1,10 +1,7 @@
-import { wines } from "../data/wines";
 import { WineCard } from "./WineCard";
 import styles from "./Favorites.module.css";
 
-export function Favorites({ favorites, onSelect, onToggleFavorite, ratings }) {
-  const favoriteWines = wines.filter((w) => favorites.includes(w.id));
-
+export function Favorites({ favoriteWines, onSelect, onToggleFavorite, ratings }) {
   if (favoriteWines.length === 0) {
     return (
       <div className={styles.empty}>
