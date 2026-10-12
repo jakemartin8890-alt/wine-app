@@ -190,6 +190,33 @@ async function ensureWinemag() {
 
 let wineDb = [];
 
+// ── Wine matching helpers ─────────────────────────────────────────────────────
+
+function normalizeForMatch(s) {
+  return (s || "")
+    .toLowerCase()
+    .replace(/\b\d{4}\b/g, "")
+    .replace(/[àáâãäå]/g, "a").replace(/[èéêë]/g, "e")
+    .replace(/[ìíîï]/g, "i").replace(/[òóôõö]/g, "o")
+    .replace(/[ùúûü]/g, "u").replace(/ç/g, "c")
+    .replace(/[^a-z0-9\s]/g, "")
+    .replace(/\s+/g, " ").trim();
+}
+
+function diceScore(a, b) {
+  if (!a || !b) return 0;
+  if (a === b) return 1;
+  const bigrams = s => {
+    const set = new Set();
+    for (let i = 0; i < s.length - 1; i++) set.add(s.slice(i, i + 2));
+    return set;
+  };
+  const A = bigrams(a), B = bigrams(b);
+  let n = 0;
+  for (const g of A) { if (B.has(g)) n++; }
+  return A.size + B.size === 0 ? 0 : (2 * n) / (A.size + B.size);
+}
+
 // ── Wine search endpoint ──────────────────────────────────────────────────────
 
 app.get("/api/wines/search", (req, res) => {
@@ -218,6 +245,36 @@ app.get("/api/wines/search", (req, res) => {
     limit:   lm,
     hasMore: start + lm < total,
   });
+});
+
+// ── Wine match endpoint ───────────────────────────────────────────────────────
+
+app.post("/api/wines/match", (req, res) => {
+  const { name } = req.body;
+  if (!name) return res.json({ match: null });
+
+  const norm = normalizeForMatch(name);
+  if (!norm) return res.json({ match: null });
+
+  const words = norm.split(" ").filter(w => w.length >= 3);
+  if (words.length === 0) return res.json({ match: null });
+
+  const candidates = wineDb.filter(w =>
+    words.some(word => w.searchText.includes(word))
+  );
+
+  let best = null;
+  let bestScore = 0;
+  for (const wine of candidates) {
+    const score = diceScore(norm, normalizeForMatch(wine.name));
+    if (score > bestScore) { bestScore = score; best = wine; }
+  }
+
+  if (bestScore >= 0.75) {
+    res.json({ match: best, score: Math.round(bestScore * 100) / 100 });
+  } else {
+    res.json({ match: null });
+  }
 });
 
 // ── AI enrichment endpoint (server-side cached) ───────────────────────────────

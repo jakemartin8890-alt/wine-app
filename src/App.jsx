@@ -47,7 +47,13 @@ export default function App() {
       </header>
 
       <main className={`${styles.main} ${tab === "profile" ? styles.chatMain : ""}`}>
-        {tab === "scan" && <WineScanner />}
+        {tab === "scan" && (
+          <WineScanner
+            onSave={toggle}
+            savedIds={favorites}
+            onViewCellar={() => setTab("cellar")}
+          />
+        )}
 
         {tab === "discover" && (
           <>

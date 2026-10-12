@@ -387,6 +387,95 @@
   color: var(--text);
 }
 
+/* ── Save to Cellar ── */
+.saveSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.saveBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 15px;
+  background: var(--burgundy);
+  border: none;
+  border-radius: 14px;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.12s;
+}
+
+.saveBtn:hover:not(:disabled) {
+  background: var(--burgundy-light);
+  transform: translateY(-1px);
+}
+
+.saveBtn:disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+
+.miniSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+.matchStatus {
+  font-size: 0.73rem;
+  color: var(--text-muted);
+  margin: 0;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.savedState {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.savedIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(212, 174, 88, 0.1);
+  border: 1px solid rgba(212, 174, 88, 0.3);
+  border-radius: 12px;
+  color: var(--gold);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.viewCellarBtn {
+  width: 100%;
+  padding: 13px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.viewCellarBtn:hover {
+  border-color: var(--surface-3);
+  color: var(--text);
+}
+
 /* ── Camera viewfinder ── */
 .cameraWrap {
   position: fixed;

@@ -2,6 +2,8 @@
 
 **GitHub**: https://github.com/jakemartin8890-alt/wine-app
 
+**App name: Wine About It** — finalized, no longer under consideration.
+
 A mobile-first wine discovery app targeting Vivino's core use cases: scan, collect, discover, and share. Installable as a PWA on iOS and Android.
 
 ## Product Vision
@@ -148,9 +150,16 @@ Before writing any code, define:
 - Need: generate a stable ID for scanned wines, store full wine object in localStorage, show in Cellar tab
 
 ### 4. App name + onboarding/marketing copy
-- "Vino" may conflict with existing apps — research and decide on final name
+- App name is finalized as **Wine About It**
 - Add first-launch onboarding (3-screen carousel or single splash): what is this app, what can you do, why AI?
 - Add marketing copy hooks: tagline in header, empty-state CTAs that sell the value prop
+
+### 5. Cellar-driven personalized recommendations
+Core insight: logged wines and ratings should power both a "For You" discovery feed and personalize the AI sommelier's responses. More logging → better recommendations → more engagement (retention loop).
+- **"For You" feed in Discover**: use cellar contents + ratings to surface wines the user will likely enjoy (similar varieties, regions, producers, score range)
+- **Personalized sommelier**: inject cellar/ratings context into every `/api/sommelier` request so Ask Vino knows what the user has tried and liked — responses should reference their actual collection
+- **Data available client-side**: `useFavorites` (saved wines) + `useRatings` (1–5 stars) already exist in localStorage; no new persistence needed to start
+- **Design questions before coding**: how much context to inject (full cellar vs. top-rated summary)? Where does "For You" live — separate tab section, default Discover view, or own tab?
 
 ## Conventions
 

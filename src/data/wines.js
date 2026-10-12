@@ -231,6 +231,55 @@ export const wines = [
 
 export const wineTypes = ["all", "red", "white", "rosé", "sparkling"];
 
+// ── Scan result normalizer ────────────────────────────────────────────────────
+
+const GRAPE_TYPE_MAP = [
+  { re: /champagne|sparkling|prosecco|cava|cr[eé]mant|franciacorta|sekt|p[eé]tillant/i, type: "sparkling" },
+  { re: /ros[eé]|rosado|rosato|blush/i, type: "rosé" },
+  { re: /chardonnay|sauvignon blanc|riesling|pinot gr[ia]|gewürz|gewurz|viognier|albar[ií]ño|albarino|chenin blanc|muscat|verdejo|grüner|gruner|verment|verdicchio|fiano|greco|gavi|pinot blanc|marsanne|roussanne|trebbiano|assyrtiko/i, type: "white" },
+];
+
+const TYPE_COLOR = { red: "#8B1A1A", white: "#EDE8C4", "rosé": "#F4A7B9", sparkling: "#F7E7A0" };
+
+function inferTypeFromGrapes(grapes) {
+  const s = (grapes || []).join(" ");
+  for (const { re, type } of GRAPE_TYPE_MAP) {
+    if (re.test(s)) return type;
+  }
+  return "red";
+}
+
+function scanId(name, vintage) {
+  const slug = (name || "")
+    .toLowerCase()
+    .replace(/\b\d{4}\b/g, "")
+    .replace(/[^a-z0-9\s]/g, "")
+    .trim()
+    .replace(/\s+/g, "_");
+  return `scan_${slug}_${vintage ? String(vintage) : "nv"}`;
+}
+
+export function normalizeScannedWine(scan) {
+  const grapes = scan.grapes || [];
+  const type   = inferTypeFromGrapes(grapes);
+  return {
+    id:         scanId(scan.name, scan.vintage),
+    source:     "scan",
+    name:       scan.name || "Unknown Wine",
+    vintage:    scan.vintage || null,
+    grape:      grapes.length ? grapes.join(", ") : null,
+    region:     scan.region || null,
+    country:    null,
+    type,
+    color:      TYPE_COLOR[type] || "#5a3a4a",
+    rating:     typeof scan.rating === "number" ? scan.rating : null,
+    price:      null,
+    priceRange: scan.priceRange || null,
+    notes:      scan.notes || null,
+    pairings:   scan.pairings || [],
+  };
+}
+
 export function searchWines(query, type) {
   const q = query.toLowerCase();
   return wines.filter((wine) => {

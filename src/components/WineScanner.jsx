@@ -1,7 +1,54 @@
 import { useState, useRef, useEffect } from "react";
+import { normalizeScannedWine } from "../data/wines";
 import styles from "./WineScanner.module.css";
 
-function ScanResult({ result, onReset }) {
+function ScanResult({ result, onReset, onSave, savedIds, onViewCellar }) {
+  const [matchState, setMatchState] = useState("matching"); // matching | matched | none
+  const [winemag, setWinemag]       = useState(null);
+  const [matchScore, setMatchScore] = useState(0);
+  const [justSaved, setJustSaved]   = useState(false);
+
+  const scanBase    = normalizeScannedWine(result);
+  const potentialId = matchState === "matched" && winemag ? winemag.id : scanBase.id;
+  const isSaved     = savedIds.includes(potentialId);
+  const showSaved   = isSaved || justSaved;
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/wines/match", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: result.name }),
+    })
+      .then(r => r.json())
+      .then(data => {
+        if (cancelled) return;
+        if (data.match) {
+          setWinemag(data.match);
+          setMatchScore(data.score);
+          setMatchState("matched");
+        } else {
+          setMatchState("none");
+        }
+      })
+      .catch(() => { if (!cancelled) setMatchState("none"); });
+    return () => { cancelled = true; };
+  }, [result.name]);
+
+  function handleSave() {
+    const scanMeta = {
+      scannedName:    result.name,
+      scannedVintage: result.vintage || null,
+      confidence:     result.confidence || null,
+      matchScore:     winemag ? matchScore : 0,
+    };
+    const wine = matchState === "matched" && winemag
+      ? { ...winemag, scannedAt: Date.now(), scanMeta }
+      : { ...scanBase, scannedAt: Date.now(), scanMeta };
+    onSave(wine);
+    setJustSaved(true);
+  }
+
   return (
     <div className={styles.result}>
       <div className={styles.resultBanner}>
@@ -70,6 +117,40 @@ function ScanResult({ result, onReset }) {
             </div>
           </section>
         )}
+
+        <div className={styles.saveSection}>
+          {showSaved ? (
+            <div className={styles.savedState}>
+              <div className={styles.savedIndicator}>
+                <span>♥</span>
+                <span>{isSaved && !justSaved ? "Already in your Cellar" : "Saved to Cellar"}</span>
+              </div>
+              <button className={styles.viewCellarBtn} onClick={onViewCellar}>
+                View in Cellar →
+              </button>
+            </div>
+          ) : (
+            <>
+              <button
+                className={styles.saveBtn}
+                onClick={handleSave}
+                disabled={matchState === "matching"}
+              >
+                {matchState === "matching"
+                  ? <><span className={styles.miniSpinner} />Finding best match…</>
+                  : <>♡ Save to Cellar</>
+                }
+              </button>
+              {matchState !== "matching" && (
+                <p className={styles.matchStatus}>
+                  {matchState === "matched"
+                    ? `◈ Matched: ${winemag.name}${winemag.points ? ` · WE ${winemag.points}pts` : ""}`
+                    : "○ Will save as scanned wine"}
+                </p>
+              )}
+            </>
+          )}
+        </div>
 
         <button className={styles.resetBtn} onClick={onReset}>
           Scan Another Label
@@ -175,7 +256,7 @@ function CameraView({ onCapture, onCancel }) {
   );
 }
 
-export function WineScanner() {
+export function WineScanner({ onSave, savedIds = [], onViewCellar }) {
   const [state, setState] = useState("idle"); // idle | camera | preview | analyzing | result | error
   const [preview, setPreview] = useState(null);
   const [imageData, setImageData] = useState(null);
@@ -238,7 +319,7 @@ export function WineScanner() {
   }
 
   if (state === "result") {
-    return <ScanResult result={result} onReset={reset} />;
+    return <ScanResult result={result} onReset={reset} onSave={onSave} savedIds={savedIds} onViewCellar={onViewCellar} />;
   }
 
   return (
