@@ -333,10 +333,12 @@ Guidelines:
 - Explain *why* a wine works — connect grape, climate, structure, and flavor briefly.
 - Keep responses conversational, warm, and focused. Around 100–200 words unless the question genuinely needs more depth.
 - For questions like "bold red under $30" always give 2–3 specific options with producers and prices.
+- If the user's wine cellar is listed below and they ask what to try, what to drink, or for any recommendation: lead immediately with 2–3 specific suggestions grounded in their highest-rated wines. Give the recommendations first, then offer to refine. Only ask a clarifying question if it genuinely changes the answer (e.g. a strict budget or a specific occasion they haven't mentioned) — do not ask clarifying questions by default.
 - If asked something outside your expertise, say so honestly and pivot to what you do know.`;
 
 app.post("/api/sommelier", async (req, res) => {
-  const { messages } = req.body;
+  const { messages, cellarContext } = req.body;
+  const system = cellarContext ? `${SYSTEM}\n\n${cellarContext}` : SYSTEM;
 
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
@@ -347,7 +349,7 @@ app.post("/api/sommelier", async (req, res) => {
     const stream = anthropic.messages.stream({
       model:      "claude-opus-4-6",
       max_tokens: 1024,
-      system:     SYSTEM,
+      system,
       messages,
     });
 
